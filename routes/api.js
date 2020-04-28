@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
-let dataBase = {};
+const SubscribeController = require('../controller/subscribe');
+let campSubscription = {};
+let campToListen = {};
 
 const WEEK_DAY_POSITION = {
   1: 1,
@@ -100,33 +102,152 @@ function getAppropriateDates(startDateStr, endDateStr, requiredDays, daysInRow) 
   }
 }
 
+function updateCampToListen(camp) {
+  if (!campToListen[camp.campId]) {
+    campSubscription[camp.campId] = [];
+  }
+
+  const startDate = new Date(camp.startDate);
+  const endDate = new Date(camp.endDate);
+
+  const tempData = [];
+  for (let i = startDate.getMonth(); i <= endDate.getMonth(); i++) {
+    tempData.push(i);
+  }
+  let i = 0;
+  let j = 0;
+  const data = [];
+  while(true) {
+    if (j === tempData.length - 1 && i === campToListen[camp.campId].length - 1) {
+      break;
+    }
+    while (campToListen[camp.campId][i] < tempData[j]) {
+      data.push(campToListen[camp.campId][i]);
+      i++;
+    }
+
+    if (campToListen[camp.campId][i] === tempData[j]) {
+      j++;
+    }
+
+    while (tempData[j] < campToListen[camp.campId][i]) {
+      data.push(tempData[j]);
+      j++;
+    }
+  }
+
+  campSubscription[camp.campId] = data;
+}
+
 
 function subscribe_(subscriber) {
   subscriber.camps.forEach((camp) => {
-    if (!dataBase[camp.campId]) {
-      dataBase[camp.campId] = {}
+    if (!campSubscription[camp.campId]) {
+      campSubscription[camp.campId] = {};
     }
 
-    dataBase[camp.campId][subscriber.phoneNumber] = 
+    updateCampToListen(camp);
+
+    campSubscription[camp.campId][subscriber.phoneNumber] = 
         getAppropriateDates(camp.startDate, camp.endDate, camp.requiredDays, camp.daysInRow);
   });
+}
+
+const DATE_FORMAT_REGEX = new RegExp('^(0[1-9])|11|12-(0[1-9])|(2[0-9])|3[0-1]-202' + new Date().getFullYear().toString()[3]);
+const NOTIFY_CLIENT_OPTIONS = {
+  'email': 'EMAIL',
+  'facebook': 'FACEBOOK',
+  'whatsapp': 'WHATSAPP',
+};
+
+function validateCampSubscription(subscription) {
+  const validationResult = {
+    valid: true,
+    errors: [],
+  };
+  if (!subscription.campId) {
+    validationResult.valid = false;
+    validationResult.errors.push('unknown-camp-id');
+  }
+  if (!subscription.startDate) {
+    validationResult.valid = false;
+    validationResult.errors.push('unknown-start-date');
+  } else if (!DATE_FORMAT_REGEX.test(subscription.startDate)) {
+    validationResult.valid = false;
+    validationResult.errors.push('invalid-start-date-format');
+  }
+  if (!subscription.endDate) {
+    validationResult.valid = false;
+    validationResult.errors.push('unknown-end-date');
+  } else if (!DATE_FORMAT_REGEX.test(subscription.endDate)) {
+    validationResult.valid = false;
+    validationResult.errors.push('invalid-end-date-format');
+  }
+
+  return validationResult;
+}
+
+function validateSubscriber(subscriber) {
+  const validationResult = {
+    valid: true,
+    errors: [],
+  };
+
+  if (!subscriber.notifyClient) {
+    validationResult.valid = false;
+    validationResult.errors.push('empty-notify-client');
+  } else if (!NOTIFY_CLIENT_OPTIONS[subscriber.notifyClient]) {
+    validationResult.valid = false;
+    validationResult.errors.push('unknown-notify-client');
+  }
+
+  if (!subscriber.userId) {
+    validationResult.valid = false;
+    validationResult.errors.push('unknown-user');
+  }
+
+  if (!subscriber.camps && subscriber.camps.length === 0) {
+    validationResult.valid = false;
+    validationResult.errors.push('empty-camp-list');
+  } else if (subscriber.camps.length > 4) {
+    validationResult.valid = false;
+    validationResult.errors.push('camp-list-contains-to-many-elements');
+  } else {
+    subscriber.camps.forEach((campSubscription) => {
+      const campSubscriptionValidationResult =
+          validateCampSubscription(campSubscription);
+
+      validationResult.valid = validationResult.valid
+          && campSubscriptionValidationResult.valid;
+
+      validationResult.errors.push(...campSubscriptionValidationResult.errors);
+    });
+  }
+
+  return validationResult;
 }
 
 /* GET home page. */
 router.post('/subscribe', function(req, res, next) {
   if (!req.body.subscriber) {
-    res.error("Subscriber body is empty.");
+    res.error('Subscriber body is empty.');
   }
 
   const subscriber = JSON.parse(req.body.subscriber);
-  
-  if (!subscriber.camps || subscriber.camps.length === 0) {
-    res.error("Subscriber body doesn't have camp to look for.");
+
+  const validationResult = validateSubscriber(subscriber);
+
+  if (!validationResult.valid) {
+    res.error(validationResult.errors);
   }
 
-  subscribe_(subscriber);
+  try {
+    SubscribeController.subscribe(subscriber);
+  } catch (e) {
+    res.error(e.message);
+  }
 
-  res.send(dataBase);
+  res.send();
 });
 
 module.exports = router;

@@ -1,10 +1,44 @@
 const request = require('supertest');
 const express = require('express');
+const {subscriptions} = require('../../storage/subscriptionStorage');
 const expect = require('chai').expect;
+const sinon = require('sinon');
 
 const app = require('../../app');
 
 describe('POST /subscribe', function() {
+  it('subscribes user by subscription', (done) => {
+    const subscriber = {
+      userId: 1,
+      notifyClient: 'whatsapp',
+      camps: [{
+        campId: 1,
+        startDate: '05-25-2020',
+        endDate: '05-27-2020'
+      }, {
+        campId: 2,
+        startDate: '05-26-2020',
+        endDate: '05-28-2020'
+      }]
+    };
+
+    request(app)
+        .post('/api/subscribe')
+        .set('Accept', 'application/json')
+        .send({subscriber: JSON.stringify(subscriber)})
+        .expect(200)
+        .then(() => {
+          expect(subscriptions).to.have.property('1');
+          expect(subscriptions['1']).to.have.property('05-25-2020-05-27-2020');
+          expect(subscriptions['1']['05-25-2020-05-27-2020']).to.be.an('array').that.does.include(1);
+          expect(subscriptions).to.have.property('2');
+          expect(subscriptions['2']).to.have.property('05-26-2020-05-28-2020');
+          expect(subscriptions['2']['05-26-2020-05-28-2020']).to.be.an('array').that.does.include(1);
+          done();
+        });
+  });
+
+  /*
   it('returns correct response for requiredDays option with gaps', function(done) {
     const expectedResponse = {
       1: {
@@ -173,4 +207,6 @@ describe('POST /subscribe', function() {
           done();
         });
   });
+
+   */
 });
