@@ -5,7 +5,7 @@ const REQUEST_TYPE = {
 };
 
 const REQUEST_METHOD = {
-  GET: '#get',
+  GET: 'get',
 };
 
 function validateRequest(request) {
@@ -37,23 +37,25 @@ function validateRequest(request) {
 
 class HttpService {
   static async send(request) {
-    const validationObject = validateRequest();
+    const validationObject = validateRequest(request);
     if (validationObject.valid === false) {
       throw new Error(validationObject.message);
     }
 
-    return this[REQUEST_METHOD[REQUEST_TYPE[request.type]]];
+    return this[REQUEST_METHOD[REQUEST_TYPE[request.type]]](request);
   }
 
-  static async #get(path) {
+  static async get({path}) {
     return requestPromise({
-      path,
+      uri: path,
       headers: {
         'User-Agent': 'Request-Promise'
       },
       json: true // Automatically parses the JSON string in the response});
+    }).then((response) => {
+      return response;
     });
   }
 }
 
-module.exports.HttpService = HttpService;
+module.exports = HttpService;

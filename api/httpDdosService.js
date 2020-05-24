@@ -1,4 +1,4 @@
-const HttpService = require('HttpService');
+const HttpService = require('./httpService');
 
 class HttpDdosService {
   #delay = 1000;
@@ -11,12 +11,12 @@ class HttpDdosService {
   async get(path) {
     return new Promise((resolve, reject) => {
         this.#promiseQueue = this.#promiseQueue.then(() => {
-            console.log('request with id ' + path + ' has started at ' + Date.now());
-            return true;
-        }).then(() => {
-            this.#makeRequest(path).then(() => {
-                console.log('request with id ' + path + ' has finished at ' + Date.now())
-            }).then(resolve).catch(reject);
+            this.makeRequest({path, type: 'GET'}).then((response) => {
+              console.log(Date.now());
+              resolve(response);
+            }).catch((error) => {
+              reject(error);
+            });
         }).catch(() => {
             console.log("Some request died");
             Promise.resolve();
@@ -24,9 +24,9 @@ class HttpDdosService {
     });
   }
 
-  #makeRequest(request) {
+  makeRequest(request) {
     return HttpService.send(request);
   }
 }
 
-module.exports.HttpDdosService = HttpDdosService;
+module.exports = HttpDdosService;

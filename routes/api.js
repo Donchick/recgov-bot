@@ -153,7 +153,7 @@ function subscribe_(subscriber) {
   });
 }
 
-const DATE_FORMAT_REGEX = new RegExp('^(0[1-9])|11|12-(0[1-9])|(2[0-9])|3[0-1]-202' + new Date().getFullYear().toString()[3]);
+const DATE_FORMAT_REGEX = new RegExp(`^202${new Date().getFullYear().toString()[3]}-((0[1-9])|11|12)-((0[1-9])|(2[0-9])|3[0-1])`);
 const NOTIFY_CLIENT_OPTIONS = {
   'email': 'EMAIL',
   'facebook': 'FACEBOOK',
@@ -169,19 +169,14 @@ function validateCampSubscription(subscription) {
     validationResult.valid = false;
     validationResult.errors.push('unknown-camp-id');
   }
-  if (!subscription.startDate) {
+  if (!subscription.dates) {
     validationResult.valid = false;
-    validationResult.errors.push('unknown-start-date');
-  } else if (!DATE_FORMAT_REGEX.test(subscription.startDate)) {
+    validationResult.errors.push('unknown-dates');
+  } else if (subscription.dates.some((dateStr) => {
+    return !DATE_FORMAT_REGEX.test(dateStr);
+  })) {
     validationResult.valid = false;
-    validationResult.errors.push('invalid-start-date-format');
-  }
-  if (!subscription.endDate) {
-    validationResult.valid = false;
-    validationResult.errors.push('unknown-end-date');
-  } else if (!DATE_FORMAT_REGEX.test(subscription.endDate)) {
-    validationResult.valid = false;
-    validationResult.errors.push('invalid-end-date-format');
+    validationResult.errors.push('invalid-date-format');
   }
 
   return validationResult;
@@ -203,10 +198,10 @@ function validateSubscriber(subscriber) {
 
   if (!subscriber.userId) {
     validationResult.valid = false;
-    validationResult.errors.push('unknown-user');
+    validationResult.errors.push('undefined-user');
   }
 
-  if (!subscriber.camps && subscriber.camps.length === 0) {
+  if (!subscriber.camps || subscriber.camps.length === 0) {
     validationResult.valid = false;
     validationResult.errors.push('empty-camp-list');
   } else if (subscriber.camps.length > 4) {
@@ -230,21 +225,30 @@ function validateSubscriber(subscriber) {
 /* GET home page. */
 router.post('/subscribe', function(req, res, next) {
   if (!req.body.subscriber) {
-    res.error('Subscriber body is empty.');
+    throw {
+      type: 'invalid-argument',
+      errors: ['empty-subscriber-body']
+    };
   }
 
-  const subscriber = JSON.parse(req.body.subscriber);
+  const subscriber = req.body.subscriber;
 
   const validationResult = validateSubscriber(subscriber);
 
   if (!validationResult.valid) {
-    res.error(validationResult.errors);
+    throw {
+      type: 'invalid-argument',
+      errors: validationResult.errors,
+    };
   }
 
   try {
     SubscribeController.subscribe(subscriber);
   } catch (e) {
-    res.error(e.message);
+    throw {
+      type: 'subscription-error',
+      errors: [e.message],
+    };
   }
 
   res.send();

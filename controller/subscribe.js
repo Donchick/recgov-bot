@@ -1,5 +1,4 @@
 const subscriptionStorage = require('../storage/subscriptionStorage');
-//const userStorage = require('userStorage');
 
 class SubscribeController {
   /*
@@ -14,15 +13,6 @@ class SubscribeController {
     } catch (e) {
       throw new Error('camps-subscription-failed');
     }
-
-    /*
-    try {
-      userStorage.add(subscription);
-    } catch (e) {
-      this.#deleteUserSubscriptions(subscription.userId);
-      throw new Error('user-subscription-failed');
-    }
-     */
   }
 }
 

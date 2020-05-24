@@ -60,12 +60,22 @@ router.post('/register', function(req, res) {
     return;
   }
 
+  if (!req.body.notificationClients) {
+    res.status(400).send(new Error('unspecified-notification-client'));
+    return;
+  }
+
+  if (req.body.notificationClients.some((client) => userStorage.NOTIFY_CLIENT_OPTIONS[client.resource] === undefined)) {
+    res.status(400).send(new Error('unknown-notification-client'));
+    return;
+  }
+
   if (isValidUser(req.body.login, req.body.password)) {
     res.status(400).send(new Error('account-already-exists'));
     return;
   }
 
-  userStorage.addUser(req.body.login, req.body.password);
+  userStorage.addUser(req.body.login, req.body.password, req.body.notificationClients);
 
   const newSessionToken = uuidV1();
   authorizedUsers[req.body.login] = newSessionToken;
