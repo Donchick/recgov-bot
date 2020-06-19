@@ -12,7 +12,7 @@ function add_(campSubscription, userId) {
         Number(dateSteps[2]),
         0,
         new Date().getTimezoneOffset()));
-  }).sort((a, b) => a > b ? b : a);
+  }).sort((a, b) => a.getTime() - b.getTime());
   const datesKey = filteredDates.map(
       (date) => date.toISOString().split("T")[0]).join(":");
 

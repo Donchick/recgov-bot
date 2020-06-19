@@ -1,4 +1,4 @@
-const uuidV1 = require('uuid/v1');
+const { v4: uuidv4 } = require('uuid');
 const users = new Map();
 
 const NOTIFY_CLIENT_OPTIONS = {
@@ -7,13 +7,17 @@ const NOTIFY_CLIENT_OPTIONS = {
   'whatsapp': 'WHATSAPP',
 };
 
+const NOTIFY_CLIENT_PATH_PATTERNS = {
+  'WHATSAPP': /^\+\d{11}/,
+};
+
 function addUser(login, password, notificationClients) {
-  const id = uuidV1();
+  const id = uuidv4();
   return users.set(id, {
     login,
     password,
     notifyOptions: notificationClients.reduce((options, client) => {
-      options[client.resource] = client.path;
+      options[NOTIFY_CLIENT_OPTIONS[client.resource]] = client.path;
       return options;
     }, {}),
   });
@@ -29,8 +33,14 @@ function isValidUser(login, password) {
   return false;
 }
 
+function getUserNotifyOptions(userId) {
+  return users.get(userId).notifyOptions;
+}
+
 module.exports = {
   addUser,
   isValidUser,
+  getUserNotifyOptions,
   NOTIFY_CLIENT_OPTIONS,
+  NOTIFY_CLIENT_PATH_PATTERNS,
 };

@@ -1,5 +1,5 @@
 const {campMonthsToRequest, subscriptions} = require('../storage/subscriptionStorage');
-const WhatsAppNotifier = require("../api/whatsappClient");
+const UserNotifier = require("../api/userNotifier");
 const HttpDdosService = require('../api/httpDdosService');
 
 class AvailabilityChecker {
@@ -12,46 +12,47 @@ class AvailabilityChecker {
     this.check();
   }
 
-  parseResponses({campId, responses}) {
-    return [campId, responses.reduce((campsitesAvailability, {campsites}) => {
-      Object.entries(campsites).forEach(([campsiteId, {availabilities}]) => {
+  parseResponses(responses) {
+    return responses.reduce((campsitesAvailability, {campsites}) => {
+      Object.values(campsites).forEach(({site, availabilities}) => {
         Object.entries(availabilities).forEach(([date, availability]) => {
-          if (availability === "Reserved") {
-            if (!campsitesAvailability[campsiteId]) {
-              campsitesAvailability[campsiteId] = {};
+          if (availability === "Available") {
+            if (!campsitesAvailability[site]) {
+              campsitesAvailability[site] = {};
             }
 
             const formattedDate = date.split("T")[0];
-            campsitesAvailability[campsiteId][formattedDate] = true;
+            campsitesAvailability[site][formattedDate] = true;
           }
         })
       });
 
       return campsitesAvailability;
-    }, {})];
+    }, {});
   }
 
   checkAvailability(availabilities, campId) {
-    console.log(subscriptions);
-    console.log(availabilities);
-    const campMatches = [];
+    const campMatches = {};
 
     Object.entries(availabilities).forEach(([campsiteId, availability]) => {
       Object.keys(subscriptions[campId]).forEach((datesString) => {
         const dateStrings = datesString.split(":");
 
         if (dateStrings.every((dateStr) => availability[dateStr])) {
-          campMatches.push({
-            campsiteId,
-            startDate: dateStrings[0],
-            endDate: dateStrings[dateStrings.length - 1],
-            users: subscriptions[campId][datesString],
-          });
+          const datesKey = `${dateStrings[0]}:${dateStrings[dateStrings.length - 1]}`;
+          if (!campMatches[datesKey]) {
+            campMatches[datesKey] = {
+              campsiteIds: [],
+              users: subscriptions[campId][datesString],
+            };
+          }
+
+          campMatches[datesKey].campsiteIds.push(campsiteId);
         }
       });
     });
 
-    return [campId, campMatches];
+    return campMatches;
   }
 
   check() {
@@ -65,12 +66,11 @@ class AvailabilityChecker {
     });
 
     requestsForCamps.forEach(({campId, requests}) => {
-      //?!??!?!?!????!?!!?!?!?
       Promise.all(requests.map((request) => this.#ddosService.get(request)))
-          .then((responses) => this.parseResponses({campId, responses}))
-          .then(([campId, availability]) => this.checkAvailability(availability, campId))
-          .then(([campId, campMatches]) => WhatsAppNotifier.notify(campId, campMatches))
-          .catch((e) => console.log("request " + requests[0] + " failed"));
+          .then((responses) => this.parseResponses(responses))
+          .then((availability) => this.checkAvailability(availability, campId))
+          .then((campMatches) => UserNotifier.notify(campId, campMatches))
+          .catch((e) => console.log("request " + requests[0] + " failed" + e));
     });
 
     const nextTimerValue =

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha 'test/routes/api_test.js'"
+    "test": "mocha test/*/*.js"
   },
   "dependencies": {
     "chai": "^4.2.0",
@@ -21,7 +21,8 @@
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "sinon": "^9.0.2",
-    "uuid": "^7.0.3"
+    "uuid": "^7.0.3",
+    "twilio": "^4.6.0"
   },
   "devDependencies": {
     "supertest": "^4.0.2"

@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const userStorage = require('../storage/userStorage');
-const uuidV1 = require('uuid/v1');
+const { v4: uuidv4 } = require('uuid');
 
 const sessionTokenName = 'session-token';
 const authorizedUsers = {};
@@ -27,7 +27,7 @@ router.post('/login', function(req, res, next) {
   }
 
   if (isValidUser(req.body.login, req.body.password)) {
-    const newSessionToken = uuidV1();
+    const newSessionToken = uuidv4();
     authorizedUsers[req.body.login] = newSessionToken;
     res.set(sessionTokenName, newSessionToken);
     res.sendStatus(200);
@@ -70,6 +70,12 @@ router.post('/register', function(req, res) {
     return;
   }
 
+  if (req.body.notificationClients.some((client) =>
+      !userStorage.NOTIFY_CLIENT_PATH_PATTERNS[userStorage.NOTIFY_CLIENT_OPTIONS[client.resource]].test(client.path))) {
+    res.status(400).send(new Error('unknown-notification-path-invalid'));
+    return;
+  }
+
   if (isValidUser(req.body.login, req.body.password)) {
     res.status(400).send(new Error('account-already-exists'));
     return;
@@ -77,7 +83,7 @@ router.post('/register', function(req, res) {
 
   userStorage.addUser(req.body.login, req.body.password, req.body.notificationClients);
 
-  const newSessionToken = uuidV1();
+  const newSessionToken = uuidv4();
   authorizedUsers[req.body.login] = newSessionToken;
   res.set(sessionTokenName, newSessionToken);
   res.sendStatus(200);

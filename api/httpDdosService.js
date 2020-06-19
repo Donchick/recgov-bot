@@ -12,7 +12,7 @@ class HttpDdosService {
     return new Promise((resolve, reject) => {
         this.#promiseQueue = this.#promiseQueue.then(() => {
             this.makeRequest({path, type: 'GET'}).then((response) => {
-              console.log(Date.now());
+              console.log(Date.now() + ' - ' + path);
               resolve(response);
             }).catch((error) => {
               reject(error);
