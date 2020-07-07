@@ -78,7 +78,7 @@ app.listen(3001, () => {
       campId: 232450,
       dates: ['2020-07-25'],
     }, {
-      campId: 232450,
+      campId: 233345,
       dates: ['2020-08-01'],
     }], userId: usersDB.keys().next().value});
   const availabilityChecker = new AvailabilityChecker();
