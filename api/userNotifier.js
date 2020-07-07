@@ -7,8 +7,8 @@ const CLIENT_NOTIFIER_BY_NAMES = {
 };
 
 
-function sendUserMessage(userSessionId, message) {
-  const userNotifyOptions = userStorage.getUserNotifyOptions(userSessionId);
+function sendUserMessage(userId, message) {
+  const userNotifyOptions = userStorage.getUserNotifyOptions(userId);
   for(let notifier in userNotifyOptions) {
     if (CLIENT_NOTIFIER_BY_NAMES[notifier]) {
       CLIENT_NOTIFIER_BY_NAMES[notifier].notify(userNotifyOptions[notifier], message);

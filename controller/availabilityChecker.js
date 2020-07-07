@@ -75,7 +75,7 @@ class AvailabilityChecker {
 
     const nextTimerValue =
         requestsForCamps.reduce((sum, {requests}) => requests.length + sum, 0) * (60 / this.#ddosCount);
-    setTimeout(() => this.check(), nextTimerValue < 5000 ? 5000 : nextTimerValue);
+    setTimeout(() => this.check(), nextTimerValue < 3000 ? 3000 : nextTimerValue);
   }
 }
 

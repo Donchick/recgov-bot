@@ -11,6 +11,7 @@ var apiRouter = require('./routes/api');
 var authRouter = require('./routes/auth');
 const {addUser} = require('./storage/userStorage');
 const subscriptionStorage = require('./storage/subscriptionStorage');
+const WhatsAppNotifier = require('./api/whatsappClient');
 
 var app = express();
 
@@ -78,6 +79,7 @@ app.listen(3001, () => {
       dates: ['2020-08-01'],
     }], userId: usersDB.keys().next().value});
   const availabilityChecker = new AvailabilityChecker();
+  WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
 });
 
 module.exports = app;
