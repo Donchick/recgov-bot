@@ -5,7 +5,7 @@ const HttpDdosService = require('../api/httpDdosService');
 class AvailabilityChecker {
   #path = "https://www.recreation.gov/api/camps/availability/campground/";
   #ddosService = null;
-  #ddosCount = 120;
+  #ddosCount = 60;
 
   constructor() {
     this.#ddosService = new HttpDdosService(this.#ddosCount);
@@ -74,8 +74,8 @@ class AvailabilityChecker {
     });
 
     const nextTimerValue =
-        requestsForCamps.reduce((sum, {requests}) => requests.length + sum, 0) * (60 / this.#ddosCount);
-    setTimeout(() => this.check(), nextTimerValue < 3000 ? 3000 : nextTimerValue);
+        requestsForCamps.reduce((sum, {requests}) => requests.length + sum, 0) * (60 / this.#ddosCount) * 1000;
+    setTimeout(() => this.check(), nextTimerValue < 10000 ? 10000 : nextTimerValue);
   }
 }
 
