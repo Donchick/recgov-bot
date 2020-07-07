@@ -1,9 +1,9 @@
 const userStorage = require('../storage/userStorage');
 const campDataStorage = require('../storage/campDataStorage');
-const SMSNotifier = require('../api/smsNotifier');
+const WhatsAppNotifier = require('../api/whatsappClient');
 
 const CLIENT_NOTIFIER_BY_NAMES = {
-  'WHATSAPP': SMSNotifier,
+  'WHATSAPP': WhatsAppNotifier,
 };
 
 

@@ -11,7 +11,7 @@ var apiRouter = require('./routes/api');
 var authRouter = require('./routes/auth');
 const {addUser} = require('./storage/userStorage');
 const subscriptionStorage = require('./storage/subscriptionStorage');
-const SMSNotifier = require('./api/smsNotifier');
+const WhatsAppNotifier = require('./api/whatsappClient');
 
 var app = express();
 
@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/', apiRouter);
 app.use('/api/auth', authRouter);
 app.post('/status', (req, res) => {
-  SMSNotifier.notify('+14154120073', 'Boss, advanced pinger is working!');
+  WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
 });
 
 // catch 404 and forward to error handler
@@ -43,7 +43,7 @@ app.use(function(err, req, res, next) {
 
 app.listen(3001, () => {
   console.log("Server started!");
-  const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+14154120073"}]);
+  const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
   subscriptionStorage.add({camps: [{
       campId: 232447,
       dates: ['2020-07-11'],
@@ -82,7 +82,7 @@ app.listen(3001, () => {
       dates: ['2020-08-01'],
     }], userId: usersDB.keys().next().value});
   const availabilityChecker = new AvailabilityChecker();
-  SMSNotifier.notify('+14154120073', 'Boss, advanced pinger is working!');
+  WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
 });
 
 module.exports = app;
