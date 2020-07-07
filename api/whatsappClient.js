@@ -1,4 +1,4 @@
-const client = require('twilio')('ACe0297ba5794baa1802f580ffdee50b2d', 'SM753d930205f745e2bc9399e7d54f101c');
+const client = require('twilio')('ACe0297ba5794baa1802f580ffdee50b2d', '80f4ea918d7019d5a862d9c461468fe6');
 
 class WhatsAppNotifier {
   static notify(phoneNumber, message) {
