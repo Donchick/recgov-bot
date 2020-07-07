@@ -9,6 +9,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var apiRouter = require('./routes/api');
 var authRouter = require('./routes/auth');
+const {addUser} = require('./storage/userStorage');
+const subscriptionStorage = require('./storage/subscriptionStorage');
 
 var app = express();
 
@@ -37,6 +39,44 @@ app.use(function(err, req, res, next) {
 
 app.listen(3001, () => {
   console.log("Server started!");
+  const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
+  subscriptionStorage.add({camps: [{
+      campId: 232447,
+      dates: ['2020-07-11'],
+    }, {
+      campId: 232447,
+      dates: ['2020-07-18'],
+    }, {
+      campId: 232447,
+      dates: ['2020-07-25'],
+    }, {
+      campId: 232447,
+      dates: ['2020-08-01'],
+    }, {
+      campId: 232449,
+      dates: ['2020-07-11'],
+    }, {
+      campId: 232449,
+      dates: ['2020-07-18'],
+    }, {
+      campId: 232449,
+      dates: ['2020-07-25'],
+    }, {
+      campId: 232449,
+      dates: ['2020-08-01'],
+    }, {
+      campId: 232450,
+      dates: ['2020-07-11'],
+    }, {
+      campId: 232450,
+      dates: ['2020-07-18'],
+    }, {
+      campId: 232450,
+      dates: ['2020-07-25'],
+    }, {
+      campId: 232450,
+      dates: ['2020-08-01'],
+    }], userId: usersDB.keys().next().value});
   const availabilityChecker = new AvailabilityChecker();
 });
 
