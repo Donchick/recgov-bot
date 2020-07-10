@@ -74,15 +74,15 @@ app.listen(3001, () => {
     }, {
       campId: 232450,
       dates: ['2020-07-31','2020-08-01'],
-    }, {
-      campId: 232768,
-      dates: ['2020-07-24','2020-07-25'],
-    }, {
-      campId: 232768,
-      dates: ['2020-07-17','2020-07-18'],
-    }, {
-      campId: 232768,
-      dates: ['2020-07-31','2020-08-01'],
+    // }, {
+    //   campId: 232768,
+    //   dates: ['2020-07-24','2020-07-25'],
+    // }, {
+    //   campId: 232768,
+    //   dates: ['2020-07-17','2020-07-18'],
+    // }, {
+    //   campId: 232768,
+    //   dates: ['2020-07-31','2020-08-01'],
     }], userId: usersDB.keys().next().value});
   const availabilityChecker = new AvailabilityChecker();
   WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
