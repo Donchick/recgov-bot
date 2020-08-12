@@ -46,9 +46,6 @@ app.listen(3001, () => {
   const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
   subscriptionStorage.add({camps: [{
       campId: 232447,
-      dates: ['2020-08-13'],
-    }, {
-      campId: 232447,
       dates: ['2020-08-14'],
     }, {
       campId: 232447,
