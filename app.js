@@ -51,19 +51,19 @@ app.listen(3001, () => {
       campId: 232447,
       dates: ['2020-09-05','2020-09-06'],
     }, {
-      campId: 232450,
+      campId: 232768,
       dates: ['2020-08-14'],
     }, {
-      campId: 232450,
+      campId: 232768,
       dates: ['2020-09-15'],
     }, {
-      campId: 232450,
+      campId: 232768,
       dates: ['2020-09-14'],
     }, {
-      campId: 232450,
+      campId: 232768,
       dates: ['2020-09-04','2020-09-05'],
     }, {
-      campId: 232450,
+      campId: 232768,
       dates: ['2020-09-05','2020-09-06'],
     }], userId: usersDB.keys().next().value});
   const availabilityChecker = new AvailabilityChecker();
