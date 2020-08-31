@@ -46,16 +46,16 @@ app.listen(3001, () => {
   const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
   subscriptionStorage.add({camps: [{
       campId: 232447,
-      dates: ['2020-09-04','2020-09-05'],
+      dates: ['2020-09-11','2020-09-12'],
     }, {
       campId: 232447,
-      dates: ['2020-09-05','2020-09-06'],
+      dates: ['2020-09-12'],
     }, {
-      campId: 232768,
-      dates: ['2020-09-04','2020-09-05'],
+      campId: 232447,
+      dates: ['2020-09-18','2020-19-12'],
     }, {
-      campId: 232768,
-      dates: ['2020-09-05','2020-09-06'],
+      campId: 232447,
+      dates: ['2020-09-19'],
     }], userId: usersDB.keys().next().value});
   const availabilityChecker = new AvailabilityChecker();
   WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
