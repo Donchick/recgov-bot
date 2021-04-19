@@ -12,6 +12,7 @@ var authRouter = require('./routes/auth');
 const {addUser} = require('./storage/userStorage');
 const subscriptionStorage = require('./storage/subscriptionStorage');
 const WhatsAppNotifier = require('./api/whatsappClient');
+const PORT = process.env.PORT || 3001;
 
 var app = express();
 
@@ -41,7 +42,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(3001, () => {
+app.listen(PORT, () => {
   console.log("Server started!");
   const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
   subscriptionStorage.add({camps: [{
