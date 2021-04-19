@@ -27,5 +27,8 @@
   },
   "devDependencies": {
     "supertest": "^4.0.2"
+  },
+  "engines" : {
+    "node" : ">=8.0.0 <11.0.0"
   }
 }

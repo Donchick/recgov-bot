@@ -42,7 +42,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-console.log(PORT);
 app.listen(PORT, () => {
   console.log("Server started!");
   const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
