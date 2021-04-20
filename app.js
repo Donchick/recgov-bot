@@ -57,7 +57,10 @@ app.listen(PORT, () => {
     }], userId: usersDB.keys().next().value});
   const availabilityChecker = new AvailabilityChecker();
   WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
-  setTimeout(() => WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!'), 60*60*12*1000)
+  setTimeout(() => {
+    WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
+    console.log('Boss, I\'m working. Message was sent.');
+  }, 60*60*12*1000);
 });
 
 module.exports = app;
