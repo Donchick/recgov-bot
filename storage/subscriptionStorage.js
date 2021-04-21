@@ -46,6 +46,8 @@ function add(subscriber) {
   subscriber.camps.forEach((campSubscription) => {
     add_(campSubscription, subscriber.userId);
   });
+
+  console.log(subscriptions);
 }
 
 module.exports = {add, subscriptions, campMonthsToRequest};
