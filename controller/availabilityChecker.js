@@ -5,7 +5,7 @@ const HttpDdosService = require('../api/httpDdosService');
 class AvailabilityChecker {
   #path = "https://www.recreation.gov/api/camps/availability/campground/";
   #ddosService = null;
-  #ddosCount = 30;
+  #ddosCount = 10;
 
   constructor() {
     this.#ddosService = new HttpDdosService(this.#ddosCount);
