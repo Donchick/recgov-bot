@@ -191,7 +191,7 @@ app.listen(PORT, () => {
       dates: ['2021-09-04'],
     }], userId: usersDB.keys().next().value});
   const availabilityChecker = new AvailabilityChecker();
-  WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
+  WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!!');
   setInterval(() => {
     WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
     console.log('Boss, I\'m working. Message was sent.');
