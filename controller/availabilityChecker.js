@@ -66,7 +66,6 @@ class AvailabilityChecker {
     });
 
     requestsForCamps.forEach(({campId, requests}) => {
-      console.log(`Making requests set for ${campId}`);
       Promise.all(requests.map((request) => this.#ddosService.get(request)))
           .then((responses) => this.parseResponses(responses))
           .then((availability) => this.checkAvailability(availability, campId))
