@@ -11,6 +11,7 @@ class HttpDdosService {
   async get(path) {
     return new Promise((resolve, reject) => {
         this.#promiseQueue = this.#promiseQueue.then(() => {
+            console.log(`Making ${path}`);
             this.makeRequest({path, type: 'GET'}).then((response) => {
               resolve(response);
             }).catch((error) => {
