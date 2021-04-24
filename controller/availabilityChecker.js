@@ -56,6 +56,7 @@ class AvailabilityChecker {
   }
 
   check() {
+    console.log('start over');
     const requestsForCamps = Object.entries(campMonthsToRequest).map(([campId, months]) => {
       return {
         campId,
