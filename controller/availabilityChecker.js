@@ -14,7 +14,6 @@ class AvailabilityChecker {
   }
 
   async startCheck() {
-    console.log('Starting new requests cycle.');
     await this.check();
     setTimeout(this.startCheck.bind(this), 0);
   }
@@ -76,7 +75,6 @@ class AvailabilityChecker {
 
     requestsForCamps.forEach(({campId, requests}) => {
       promisesQueue = promisesQueue.then(() => {
-        console.log(`Making requests set for ${campId}`);
         return Promise.all(requests.map((request) => HttpService.send({path: request, type: 'GET'})))
             .then((responses) => this.parseResponses(responses))
             .then((availability) => this.checkAvailability(availability, campId))
