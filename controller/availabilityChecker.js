@@ -1,6 +1,7 @@
 const {campMonthsToRequest, subscriptions} = require('../storage/subscriptionStorage');
 const UserNotifier = require("../api/userNotifier");
 const HttpDdosService = require('../api/httpDdosService');
+const HttpService = require('../api/httpService');
 
 class AvailabilityChecker {
   #path = "https://www.recreation.gov/api/camps/availability/campground/";
@@ -9,7 +10,13 @@ class AvailabilityChecker {
 
   constructor() {
     this.#ddosService = new HttpDdosService(this.#ddosCount);
-    this.check();
+    this.startCheck();
+  }
+
+  async startCheck() {
+    console.log('Starting new requests cycle.');
+    await this.check();
+    setTimeout(this.startCheck.bind(this), 0);
   }
 
   parseResponses(responses) {
@@ -55,7 +62,7 @@ class AvailabilityChecker {
     return campMatches;
   }
 
-  check() {
+  async check() {
     const requestsForCamps = Object.entries(campMonthsToRequest).map(([campId, months]) => {
       return {
         campId,
@@ -65,17 +72,35 @@ class AvailabilityChecker {
       )};
     });
 
+    let promisesQueue = Promise.resolve();
+
     requestsForCamps.forEach(({campId, requests}) => {
-      Promise.all(requests.map((request) => this.#ddosService.get(request)))
-          .then((responses) => this.parseResponses(responses))
-          .then((availability) => this.checkAvailability(availability, campId))
-          .then((campMatches) => UserNotifier.notify(campId, campMatches))
-          .catch((e) => console.log("request " + requests[0] + " failed" + e));
+      promisesQueue = promisesQueue.then(() => {
+        console.log(`Making requests set for ${campId}`);
+        return Promise.all(requests.map((request) => HttpService.send({path: request, type: 'GET'})))
+            .then((responses) => this.parseResponses(responses))
+            .then((availability) => this.checkAvailability(availability, campId))
+            .then((campMatches) => {
+              UserNotifier.notify(campId, campMatches);
+              return Promise.resolve();
+            })
+            .catch((e) => console.log("request " + requests[0] + " failed" + e));
+      }).then(() => new Promise((resolve) => setTimeout(resolve, 30*1000)));
     });
 
-    const nextTimerValue =
-        requestsForCamps.reduce((sum, {requests}) => requests.length + sum, 0) * (60 / this.#ddosCount) * 1000;
-    setTimeout(() => this.check(), nextTimerValue < 10000 ? 10000 : nextTimerValue);
+    return promisesQueue;
+
+    // requestsForCamps.forEach(({campId, requests}) => {
+    //   Promise.all(requests.map((request) => this.#ddosService.get(request)))
+    //       .then((responses) => this.parseResponses(responses))
+    //       .then((availability) => this.checkAvailability(availability, campId))
+    //       .then((campMatches) => UserNotifier.notify(campId, campMatches))
+    //       .catch((e) => console.log("request " + requests[0] + " failed" + e));
+    // });
+
+    // const nextTimerValue =
+    //     requestsForCamps.reduce((sum, {requests}) => requests.length + sum, 0) * (60 / this.#ddosCount) * 1000;
+    // setTimeout(() => this.check(), nextTimerValue < 10000 ? 10000 : nextTimerValue);
   }
 }
 

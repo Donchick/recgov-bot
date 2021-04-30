@@ -28,7 +28,7 @@
   "devDependencies": {
     "supertest": "^4.0.2"
   },
-  "engines" : {
-    "node" : ">=14.*.*"
+  "engines": {
+    "node": ">=14.*.*"
   }
 }
