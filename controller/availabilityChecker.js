@@ -83,7 +83,7 @@ class AvailabilityChecker {
               return Promise.resolve();
             })
             .catch((e) => console.log("request " + requests[0] + " failed" + e));
-      }).then(() => new Promise((resolve) => setTimeout(resolve, 30*1000)));
+      }).then(() => new Promise((resolve) => setTimeout(resolve, 10*1000)));
     });
 
     return promisesQueue;
