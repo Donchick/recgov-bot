@@ -14,6 +14,143 @@ const subscriptionStorage = require('./storage/subscriptionStorage');
 const WhatsAppNotifier = require('./api/whatsappClient');
 const PORT = process.env.PORT || 3001;
 
+const camps = [{
+    campId: 232449,
+    dates: ['2021-06-05'],
+}, {
+    campId: 232449,
+    dates: ['2021-06-12'],
+}, {
+    campId: 232449,
+    dates: ['2021-06-19'],
+}, {
+    campId: 232449,
+    dates: ['2021-06-26'],
+}, {
+    campId: 232449,
+    dates: ['2021-07-03','2021-07-04'],
+}, {
+    campId: 232449,
+    dates: ['2021-07-04','2021-07-05'],
+}, {
+    campId: 232449,
+    dates: ['2021-07-10'],
+}, {
+    campId: 232449,
+    dates: ['2021-07-17'],
+}, {
+    campId: 232449,
+    dates: ['2021-07-24'],
+}, {
+    campId: 232449,
+    dates: ['2021-07-31'],
+}, {
+    campId: 232449,
+    dates: ['2021-09-04','2021-07-05'],
+}, {
+    campId: 232449,
+    dates: ['2021-09-11'],
+}, {
+    campId: 232449,
+    dates: ['2021-09-18'],
+}, {
+    campId: 232450,
+    dates: ['2021-06-05'],
+}, {
+    campId: 232450,
+    dates: ['2021-06-12'],
+}, {
+    campId: 232450,
+    dates: ['2021-06-19'],
+}, {
+    campId: 232450,
+    dates: ['2021-06-26'],
+}, {
+    campId: 232450,
+    dates: ['2021-07-03','2021-07-04'],
+}, {
+    campId: 232450,
+    dates: ['2021-07-04','2021-07-05'],
+}, {
+    campId: 232450,
+    dates: ['2021-07-10'],
+}, {
+    campId: 232450,
+    dates: ['2021-07-17'],
+}, {
+    campId: 232450,
+    dates: ['2021-07-24'],
+}, {
+    campId: 232450,
+    dates: ['2021-07-31'],
+}, {
+    campId: 232450,
+    dates: ['2021-09-04','2021-07-05'],
+}, {
+    campId: 232450,
+    dates: ['2021-09-11'],
+}, {
+    campId: 232450,
+    dates: ['2021-09-18'],
+}, {
+    campId: 232447,
+    dates: ['2021-06-05'],
+}, {
+    campId: 232447,
+    dates: ['2021-06-12'],
+}, {
+    campId: 232447,
+    dates: ['2021-06-19'],
+}, {
+    campId: 232447,
+    dates: ['2021-06-26'],
+}, {
+    campId: 232447,
+    dates: ['2021-07-03','2021-07-04'],
+}, {
+    campId: 232447,
+    dates: ['2021-07-04','2021-07-05'],
+}, {
+    campId: 232447,
+    dates: ['2021-07-10'],
+}, {
+    campId: 232447,
+    dates: ['2021-07-17'],
+}, {
+    campId: 232447,
+    dates: ['2021-07-24'],
+}, {
+    campId: 232447,
+    dates: ['2021-07-31'],
+}, {
+    campId: 232447,
+    dates: ['2021-09-04','2021-07-05'],
+}, {
+    campId: 232447,
+    dates: ['2021-09-11'],
+}, {
+    campId: 232447,
+    dates: ['2021-09-18'],
+}, {
+    campId: 232768,
+    dates: ['2021-07-31'],
+}, {
+    campId: 232768,
+    dates: ['2021-08-07'],
+}, {
+    campId: 232768,
+    dates: ['2021-08-14'],
+}, {
+    campId: 232768,
+    dates: ['2021-08-21'],
+}, {
+    campId: 232768,
+    dates: ['2021-08-28'],
+}, {
+    campId: 232768,
+    dates: ['2021-09-04'],
+}];
+
 var app = express();
 
 app.use(logger('dev'));
@@ -45,160 +182,9 @@ app.use(function(err, req, res, next) {
 app.listen(PORT, () => {
   console.log("Server started!");
   const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
-  subscriptionStorage.add({camps: [{
-      campId: 232449,
-      dates: ['2021-05-27'],
-    }, {
-      campId: 232449,
-      dates: ['2021-05-29','2021-05-30'],
-    }, {
-      campId: 232449,
-      dates: ['2021-06-05'],
-    }, {
-      campId: 232449,
-      dates: ['2021-06-12'],
-    }, {
-      campId: 232449,
-      dates: ['2021-06-19'],
-    }, {
-      campId: 232449,
-      dates: ['2021-06-26'],
-    }, {
-      campId: 232449,
-      dates: ['2021-07-03','2021-07-04'],
-    }, {
-      campId: 232449,
-      dates: ['2021-07-04','2021-07-05'],
-    }, {
-      campId: 232449,
-      dates: ['2021-07-10'],
-    }, {
-      campId: 232449,
-      dates: ['2021-07-17'],
-    }, {
-      campId: 232449,
-      dates: ['2021-07-24'],
-    }, {
-      campId: 232449,
-      dates: ['2021-07-31'],
-    }, {
-      campId: 232449,
-      dates: ['2021-09-04','2021-07-05'],
-    }, {
-      campId: 232449,
-      dates: ['2021-09-11'],
-    }, {
-      campId: 232449,
-      dates: ['2021-09-18'],
-    }, {
-      campId: 232450,
-      dates: ['2021-05-28'],
-    }, {
-      campId: 232450,
-      dates: ['2021-05-29','2021-05-30'],
-    }, {
-      campId: 232450,
-      dates: ['2021-06-05'],
-    }, {
-      campId: 232450,
-      dates: ['2021-06-12'],
-    }, {
-      campId: 232450,
-      dates: ['2021-06-19'],
-    }, {
-      campId: 232450,
-      dates: ['2021-06-26'],
-    }, {
-      campId: 232450,
-      dates: ['2021-07-03','2021-07-04'],
-    }, {
-      campId: 232450,
-      dates: ['2021-07-04','2021-07-05'],
-    }, {
-      campId: 232450,
-      dates: ['2021-07-10'],
-    }, {
-      campId: 232450,
-      dates: ['2021-07-17'],
-    }, {
-      campId: 232450,
-      dates: ['2021-07-24'],
-    }, {
-      campId: 232450,
-      dates: ['2021-07-31'],
-    }, {
-      campId: 232450,
-      dates: ['2021-09-04','2021-07-05'],
-    }, {
-      campId: 232450,
-      dates: ['2021-09-11'],
-    }, {
-      campId: 232450,
-      dates: ['2021-09-18'],
-    }, {
-      campId: 232447,
-      dates: ['2021-05-28'],
-    }, {
-      campId: 232447,
-      dates: ['2021-05-29','2021-05-30'],
-    }, {
-      campId: 232447,
-      dates: ['2021-06-05'],
-    }, {
-      campId: 232447,
-      dates: ['2021-06-12'],
-    }, {
-      campId: 232447,
-      dates: ['2021-06-19'],
-    }, {
-      campId: 232447,
-      dates: ['2021-06-26'],
-    }, {
-      campId: 232447,
-      dates: ['2021-07-03','2021-07-04'],
-    }, {
-      campId: 232447,
-      dates: ['2021-07-04','2021-07-05'],
-    }, {
-      campId: 232447,
-      dates: ['2021-07-10'],
-    }, {
-      campId: 232447,
-      dates: ['2021-07-17'],
-    }, {
-      campId: 232447,
-      dates: ['2021-07-24'],
-    }, {
-      campId: 232447,
-      dates: ['2021-07-31'],
-    }, {
-      campId: 232447,
-      dates: ['2021-09-04','2021-07-05'],
-    }, {
-      campId: 232447,
-      dates: ['2021-09-11'],
-    }, {
-      campId: 232447,
-      dates: ['2021-09-18'],
-    }, {
-      campId: 232768,
-      dates: ['2021-07-31'],
-    }, {
-      campId: 232768,
-      dates: ['2021-08-07'],
-    }, {
-      campId: 232768,
-      dates: ['2021-08-14'],
-    }, {
-      campId: 232768,
-      dates: ['2021-08-21'],
-    }, {
-      campId: 232768,
-      dates: ['2021-08-28'],
-    }, {
-      campId: 232768,
-      dates: ['2021-09-04'],
-    }], userId: usersDB.keys().next().value});
+  addUser('artem', '1234', [{"resource": "whatsapp", "path":"+16504476199"}]);
+  subscriptionStorage.add({camps, userId: 123});
+  subscriptionStorage.add({camps, userId: 1234});
   const availabilityChecker = new AvailabilityChecker();
   WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!!');
   setInterval(() => {
