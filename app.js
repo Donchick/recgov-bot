@@ -16,12 +16,6 @@ const PORT = process.env.PORT || 3001;
 
 const camps = [{
     campId: 232449,
-    dates: ['2021-06-05'],
-}, {
-    campId: 232449,
-    dates: ['2021-06-12'],
-}, {
-    campId: 232449,
     dates: ['2021-06-19'],
 }, {
     campId: 232449,
@@ -55,12 +49,6 @@ const camps = [{
     dates: ['2021-09-18'],
 }, {
     campId: 232450,
-    dates: ['2021-06-05'],
-}, {
-    campId: 232450,
-    dates: ['2021-06-12'],
-}, {
-    campId: 232450,
     dates: ['2021-06-19'],
 }, {
     campId: 232450,
@@ -92,12 +80,6 @@ const camps = [{
 }, {
     campId: 232450,
     dates: ['2021-09-18'],
-}, {
-    campId: 232447,
-    dates: ['2021-06-05'],
-}, {
-    campId: 232447,
-    dates: ['2021-06-12'],
 }, {
     campId: 232447,
     dates: ['2021-06-19'],
@@ -186,7 +168,7 @@ app.listen(PORT, () => {
   subscriptionStorage.add({camps, userId: 123});
   subscriptionStorage.add({camps, userId: 1234});
   const availabilityChecker = new AvailabilityChecker();
-  WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!!');
+  WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger has started!');
   setInterval(() => {
     WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
     console.log('Boss, I\'m working. Message was sent.');
