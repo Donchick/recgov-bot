@@ -15,10 +15,6 @@ const WhatsAppNotifier = require('./api/whatsappClient');
 const PORT = process.env.PORT || 3001;
 
 const camps = [{
-    campId: 232449,
-    dates: ['2021-07-04'],
-},
-//     {
 //     campId: 232449,
 //     dates: ['2021-07-10'],
 // }, {
@@ -39,12 +35,7 @@ const camps = [{
 // }, {
 //     campId: 232449,
 //     dates: ['2021-09-18'],
-// },
-    {
-    campId: 232450,
-    dates: ['2021-07-04'],
-},
-//     {
+// }, {
 //     campId: 232450,
 //     dates: ['2021-07-10'],
 // }, {
@@ -65,12 +56,7 @@ const camps = [{
 // }, {
 //     campId: 232450,
 //     dates: ['2021-09-18'],
-// },
-    {
-    campId: 232447,
-    dates: ['2021-07-04'],
-},
-//     {
+// }, {
 //     campId: 232447,
 //     dates: ['2021-07-10'],
 // }, {
@@ -92,25 +78,24 @@ const camps = [{
 //     campId: 232447,
 //     dates: ['2021-09-18'],
 // }, {
-//     campId: 232768,
-//     dates: ['2021-07-31'],
-// }, {
-//     campId: 232768,
-//     dates: ['2021-08-07'],
-// }, {
-//     campId: 232768,
-//     dates: ['2021-08-14'],
-// }, {
-//     campId: 232768,
-//     dates: ['2021-08-21'],
-// }, {
-//     campId: 232768,
-//     dates: ['2021-08-28'],
-// }, {
-//     campId: 232768,
-//     dates: ['2021-09-04'],
-// }
-];
+    campId: 232768,
+    dates: ['2021-07-31'],
+}, {
+    campId: 232768,
+    dates: ['2021-08-07'],
+}, {
+    campId: 232768,
+    dates: ['2021-08-14'],
+}, {
+    campId: 232768,
+    dates: ['2021-08-21'],
+}, {
+    campId: 232768,
+    dates: ['2021-08-28'],
+}, {
+    campId: 232768,
+    dates: ['2021-09-04'],
+}];
 
 var app = express();
 
