@@ -20,17 +20,19 @@ class AvailabilityChecker {
 
   parseResponses(responses) {
     return responses.reduce((campsitesAvailability, {campsites}) => {
-      Object.values(campsites).forEach(({site, availabilities}) => {
-        Object.entries(availabilities).forEach(([date, availability]) => {
-          if (availability === "Available") {
-            if (!campsitesAvailability[site]) {
-              campsitesAvailability[site] = {};
-            }
+      Object.values(campsites).forEach(({site, availabilities, campsite_type}) => {
+        if (campsite_type === 'STANDARD NONELECTRIC') {
+          Object.entries(availabilities).forEach(([date, availability]) => {
+            if (availability === "Available") {
+              if (!campsitesAvailability[site]) {
+                campsitesAvailability[site] = {};
+              }
 
-            const formattedDate = date.split("T")[0];
-            campsitesAvailability[site][formattedDate] = true;
-          }
-        })
+              const formattedDate = date.split("T")[0];
+              campsitesAvailability[site][formattedDate] = true;
+            }
+          })
+        }
       });
 
       return campsitesAvailability;

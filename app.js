@@ -99,8 +99,9 @@ app.listen(PORT, () => {
   console.log("Server started!");
   const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
   addUser('artem', '1234', [{"resource": "whatsapp", "path":"+16504476199"}]);
-  subscriptionStorage.add({camps, userId: 123});
-  subscriptionStorage.add({camps, userId: 1234});
+  for([key] of usersDB.entries()) {
+      subscriptionStorage.add({camps, userId: key});
+  }
   const availabilityChecker = new AvailabilityChecker();
   WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger has started!');
   setInterval(() => {
