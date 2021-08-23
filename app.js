@@ -15,32 +15,11 @@ const WhatsAppNotifier = require('./api/whatsappClient');
 const PORT = process.env.PORT || 3001;
 
 const camps = [{
-  campId: 232447,
-  dates: ['2021-09-03', '2021-09-04'],
-}, {
-  campId: 232447,
-  dates: ['2021-09-04', '2021-09-05'],
-}, {
-  campId: 232450,
-  dates: ['2021-09-03', '2021-09-04'],
-}, {
-  campId: 232450,
-  dates: ['2021-09-04', '2021-09-05'],
-}, {
   campId: 232449,
   dates: ['2021-09-11'],
 }, {
-  campId: 232449,
-  dates: ['2021-09-03', '2021-09-04'],
-}, {
-  campId: 232449,
-  dates: ['2021-09-04', '2021-09-05'],
-}, {
-  campId: 232768,
-  dates: ['2021-09-03', '2021-09-04'],
-}, {
-  campId: 232768,
-  dates: ['2021-09-04', '2021-09-05'],
+  campId: 232447,
+  dates: ['2021-09-11'],
 }];
 
 var app = express();
