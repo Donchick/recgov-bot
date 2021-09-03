@@ -17,9 +17,6 @@ const PORT = process.env.PORT || 3001;
 const camps = [{
   campId: 232449,
   dates: ['2021-09-11'],
-}, {
-  campId: 232447,
-  dates: ['2021-09-11'],
 }];
 
 var app = express();
