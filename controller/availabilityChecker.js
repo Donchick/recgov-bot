@@ -77,14 +77,30 @@ class AvailabilityChecker {
 
     requestsForCamps.forEach(({campId, requests}) => {
       promisesQueue = promisesQueue.then(() => {
-        return Promise.all(requests.map((request) => HttpService.send({path: request, type: 'GET'})))
-            .then((responses) => this.parseResponses(responses))
+        let campingPromisesQueue = Promise.resolve();
+        let responses = [];
+
+        requests.forEach((request, index) => {
+          campingPromisesQueue = campingPromisesQueue
+              .then(() => HttpService.send({path: request, type: 'GET'}))
+              .then((response) => responses.push(response))
+              .catch((e) => console.log("request " + requests[0] + " failed" + e))
+              .finally(() => {
+                if (index == requests.length - 1) {
+                  return Promise.resolve();
+                }
+                return new Promise((resolve) => setTimeout(resolve, 1*1000))
+              })
+        });
+
+        return campingPromisesQueue
+            .then(() => this.parseResponses(responses))
             .then((availability) => this.checkAvailability(availability, campId))
             .then((campMatches) => {
               UserNotifier.notify(campId, campMatches);
               return Promise.resolve();
             })
-            .catch((e) => console.log("request " + requests[0] + " failed" + e));
+            .catch((e) => console.log("could not finish collecting for camping ", campId));
       }).then(() => new Promise((resolve) => setTimeout(resolve, 5*1000)));
     });
 
