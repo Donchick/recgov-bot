@@ -85,12 +85,7 @@ class AvailabilityChecker {
               .then(() => HttpService.send({path: request, type: 'GET'}))
               .then((response) => responses.push(response))
               .catch((e) => console.log("request " + requests[0] + " failed" + e))
-              .finally(() => {
-                if (index == requests.length - 1) {
-                  return Promise.resolve();
-                }
-                return new Promise((resolve) => setTimeout(resolve, 1*1000))
-              })
+              .then(() => new Promise((resolve) => setTimeout(resolve, 1.5*1000)))
         });
 
         return campingPromisesQueue
@@ -101,7 +96,9 @@ class AvailabilityChecker {
               return Promise.resolve();
             })
             .catch((e) => console.log("could not finish collecting for camping ", campId));
-      }).then(() => new Promise((resolve) => setTimeout(resolve, 5*1000)));
+      })
+      .catch(() => console.log("could not finish flow for all camps"))
+      .then(() => new Promise((resolve) => setTimeout(resolve, 3*1000)));
     });
 
     return promisesQueue;
