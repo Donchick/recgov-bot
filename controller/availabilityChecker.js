@@ -76,19 +76,32 @@ class AvailabilityChecker {
     let promisesQueue = Promise.resolve();
 
     requestsForCamps.forEach(({campId, requests}) => {
+      let responses = [];
+      let campingPromisesQueue = Promise.resolve();
       promisesQueue = promisesQueue.then(() => {
-        let campingPromisesQueue = Promise.resolve();
-        let responses = [];
-
         requests.forEach((request, index) => {
           campingPromisesQueue = campingPromisesQueue
               .then(() => HttpService.send({path: request, type: 'GET'}))
-              .then((response) => responses.push(response))
+              .then((response) => {
+                responses.push(response);
+                return response;
+              })
+              .then((response) => this.parseResponses([response]))
+              .then((availability) => this.checkAvailability(availability, campId))
+              .then((campMatches) => {
+                UserNotifier.notify(campId, campMatches);
+                return Promise.resolve();
+              })
               .catch((e) => console.log("request " + requests[0] + " failed" + e))
-              .then(() => new Promise((resolve) => setTimeout(resolve, 1.5*1000)))
+              .then(() => {
+                if (index == requests.length - 1) {
+                  return Promise.resolve();
+                }
+                return new Promise((resolve) => setTimeout(resolve, 3*1000))
+              })
         });
 
-        return campingPromisesQueue
+        campingPromisesQueue = campingPromisesQueue
             .then(() => this.parseResponses(responses))
             .then((availability) => this.checkAvailability(availability, campId))
             .then((campMatches) => {
@@ -96,9 +109,11 @@ class AvailabilityChecker {
               return Promise.resolve();
             })
             .catch((e) => console.log("could not finish collecting for camping ", campId));
+
+        return campingPromisesQueue;
       })
       .catch(() => console.log("could not finish flow for all camps"))
-      .then(() => new Promise((resolve) => setTimeout(resolve, 3*1000)));
+      .then(() => new Promise((resolve) => setTimeout(resolve, 5*1000)));
     });
 
     return promisesQueue;
