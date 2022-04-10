@@ -92,7 +92,7 @@ class AvailabilityChecker {
                 UserNotifier.notify(campId, campMatches);
                 return Promise.resolve();
               })
-              .catch((e) => console.log("request " + requests[0] + " failed" + e))
+              .catch((e) => console.log("request " + requests[index] + " failed" + e))
               .then(() => {
                 if (index == requests.length - 1) {
                   return Promise.resolve();
