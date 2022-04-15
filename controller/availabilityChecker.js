@@ -113,7 +113,7 @@ class AvailabilityChecker {
         return campingPromisesQueue;
       })
       .catch(() => console.log("could not finish flow for all camps"))
-      .then(() => new Promise((resolve) => setTimeout(resolve, 5*1000)));
+      .then(() => new Promise((resolve) => setTimeout(resolve, 3*1000)));
     });
 
     return promisesQueue;
