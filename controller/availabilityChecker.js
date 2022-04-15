@@ -105,7 +105,7 @@ class AvailabilityChecker {
             .then(() => this.parseResponses(responses))
             .then((availability) => this.checkAvailability(availability, campId))
             .then((campMatches) => {
-              UserNotifier.notify(campId, campMatches);
+              // UserNotifier.notify(campId, campMatches);
               return Promise.resolve();
             })
             .catch((e) => console.log("could not finish collecting for camping ", campId));
