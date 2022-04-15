@@ -51,6 +51,9 @@ const camps = [{
   campId: 232447,
   dates: ['2022-07-29', '2022-07-30'],
 }, {
+  campId: 232447,
+  dates: ['2022-04-21'],
+}, {
   campId: 232450,
   dates: ['2022-05-27', '2022-05-28'],
 }, {
@@ -154,6 +157,7 @@ app.use(function(err, req, res, next) {
 
 app.listen(PORT, () => {
   console.log("Server started!");
+  addUser('irina', '123', [{"resource": "whatsapp", "path":"+9119001155"}]);
   const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
   // addUser('artem', '1234', [{"resource": "whatsapp", "path":"+16504476199"}]);
   for([key] of usersDB.entries()) {
