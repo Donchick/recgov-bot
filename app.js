@@ -157,7 +157,7 @@ app.use(function(err, req, res, next) {
 
 app.listen(PORT, () => {
   console.log("Server started!");
-  addUser('irina', '123', [{"resource": "whatsapp", "path":"+9119001155"}]);
+  addUser('irina', '123', [{"resource": "whatsapp", "path":"+79119001155"}]);
   const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
   // addUser('artem', '1234', [{"resource": "whatsapp", "path":"+16504476199"}]);
   for([key] of usersDB.entries()) {
