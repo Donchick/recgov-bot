@@ -18,20 +18,6 @@ const WhatsAppNotifier = require('./api/whatsappClient');
 const {integer} = require("twilio/lib/base/deserialize");
 const PORT = process.env.PORT || 3001;
 
-// const camps = [{
-//   campId: 232768,
-//   dates: ['2022-08-05', '2022-08-06'],
-// }, {
-//   campId: 232768,
-//   dates: ['2022-08-06', '2022-08-07'],
-// }, {
-//   campId: 232768,
-//   dates: ['2022-08-12', '2022-08-13'],
-// }, {
-//   campId: 232768,
-//   dates: ['2022-08-13', '2022-08-14'],
-// }];
-
 promisifyAll(redis);
 client.on('error', (err) => console.log('Redis Client Error', err));
 

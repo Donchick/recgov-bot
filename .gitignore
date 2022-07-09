@@ -1,0 +1,14 @@
+# Dependency directories
+node_modules/
+
+# IntelliJ IDEA directory
+.idea
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variables file
+.env
+
+# Others
+.DS_Store
