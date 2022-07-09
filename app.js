@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const AvailabilityChecker = require('./controller/availabilityChecker');
+const redis = require("redis");
+const {promisifyAll} = require('bluebird');
+const client = redis.createClient({url: process.env.REDIS_URL});
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -12,68 +15,78 @@ var authRouter = require('./routes/auth');
 const {addUser} = require('./storage/userStorage');
 const subscriptionStorage = require('./storage/subscriptionStorage');
 const WhatsAppNotifier = require('./api/whatsappClient');
+const {integer} = require("twilio/lib/base/deserialize");
 const PORT = process.env.PORT || 3001;
 
-const camps = [{
-  campId: 232768,
-  dates: ['2022-08-05', '2022-08-06'],
-}, {
-  campId: 232768,
-  dates: ['2022-08-06', '2022-08-07'],
-}, {
-  campId: 232768,
-  dates: ['2022-08-12', '2022-08-13'],
-}, {
-  campId: 232768,
-  dates: ['2022-08-13', '2022-08-14'],
-}];
+// const camps = [{
+//   campId: 232768,
+//   dates: ['2022-08-05', '2022-08-06'],
+// }, {
+//   campId: 232768,
+//   dates: ['2022-08-06', '2022-08-07'],
+// }, {
+//   campId: 232768,
+//   dates: ['2022-08-12', '2022-08-13'],
+// }, {
+//   campId: 232768,
+//   dates: ['2022-08-13', '2022-08-14'],
+// }];
+
+promisifyAll(redis);
+client.on('error', (err) => console.log('Redis Client Error', err));
 
 var app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/', apiRouter);
 app.use('/api/auth', authRouter);
 app.post('/status', (req, res) => {
-  WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
+    WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use(function (req, res, next) {
+    next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.send({
-    type: err.type,
-    errors: err.errors
-  });
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    res.send({
+        type: err.type,
+        errors: err.errors
+    });
 });
 
-app.listen(PORT, () => {
-  console.log("Server started!");
-  addUser('irina', '123', [{"resource": "whatsapp", "path":"+79119001155"}]);
-  const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path":"+79214420927"}]);
-  // addUser('artem', '1234', [{"resource": "whatsapp", "path":"+16504476199"}]);
-  for([key] of usersDB.entries()) {
-      subscriptionStorage.add({camps, userId: key});
-  }
-  const availabilityChecker = new AvailabilityChecker();
-  WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger has started!');
-  setInterval(() => {
-    WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
-    console.log('Boss, I\'m working. Message was sent.');
-  }, 60*60*12*1000);
-  setInterval(() => {
-    WhatsAppNotifier.notify('+79214420927', 'Boss, send me a message to keep conversation alive!');
-    console.log('Boss, I\'m working. Message to keep conversation alive was sent.');
-  }, 60*60*23*1000);
+app.listen(PORT, async () => {
+    console.log("Server started!");
+    const camps = await client.lrangeAsync("campRequests", 0, 5)
+        .then(
+            (stringifiedCampsArray) => stringifiedCampsArray.map(
+                (stringifiedCamp) => JSON.parse(stringifiedCamp)));
+
+    console.log(camps);
+    addUser('irina', '123', [{"resource": "whatsapp", "path": "+79119001155"}]);
+    const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path": "+79214420927"}]);
+    // addUser('artem', '1234', [{"resource": "whatsapp", "path":"+16504476199"}]);
+    for ([key] of usersDB.entries()) {
+        subscriptionStorage.add({camps, userId: key});
+    }
+    const availabilityChecker = new AvailabilityChecker();
+    WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger has started!');
+    setInterval(() => {
+        WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
+        console.log('Boss, I\'m working. Message was sent.');
+    }, 60 * 60 * 12 * 1000);
+    setInterval(() => {
+        WhatsAppNotifier.notify('+79214420927', 'Boss, send me a message to keep conversation alive!');
+        console.log('Boss, I\'m working. Message to keep conversation alive was sent.');
+    }, 60 * 60 * 23 * 1000);
 });
 
 module.exports = app;
