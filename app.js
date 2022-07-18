@@ -48,7 +48,7 @@ app.use(function (err, req, res, next) {
 
 app.listen(PORT, async () => {
     console.log("Server started!");
-    const camps = await client.lrangeAsync("campRequests", 0, Math.max())
+    const camps = await client.lrangeAsync("campRequests", 0, Number.MAX_SAFE_INTEGER)
         .then(
             (stringifiedCampsArray) => stringifiedCampsArray.map(
                 (stringifiedCamp) => JSON.parse(stringifiedCamp)));
