@@ -8,14 +8,11 @@ const redis = require("redis");
 const {promisifyAll} = require('bluebird');
 const client = redis.createClient({url: process.env.REDIS_URL});
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var apiRouter = require('./routes/api');
 var authRouter = require('./routes/auth');
 const {addUser} = require('./storage/userStorage');
 const subscriptionStorage = require('./storage/subscriptionStorage');
 const WhatsAppNotifier = require('./api/whatsappClient');
-const {integer} = require("twilio/lib/base/deserialize");
 const PORT = process.env.PORT || 3001;
 
 promisifyAll(redis);
@@ -51,7 +48,7 @@ app.use(function (err, req, res, next) {
 
 app.listen(PORT, async () => {
     console.log("Server started!");
-    const camps = await client.lrangeAsync("campRequests", 0, 5)
+    const camps = await client.lrangeAsync("campRequests", 0, Math.max())
         .then(
             (stringifiedCampsArray) => stringifiedCampsArray.map(
                 (stringifiedCamp) => JSON.parse(stringifiedCamp)));
