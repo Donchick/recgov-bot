@@ -4,8 +4,8 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
     "build": "npm install --prefix my-app && npm run build --prefix my-app",
+    "start": "node app.js",
     "test": "mocha test/*/*.js"
   },
   "dependencies": {
