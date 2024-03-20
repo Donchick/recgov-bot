@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "build": "npm run build --prefix my-app",
+    "build": "npm install --prefix my-app && npm run build --prefix my-app",
     "test": "mocha test/*/*.js"
   },
   "dependencies": {
