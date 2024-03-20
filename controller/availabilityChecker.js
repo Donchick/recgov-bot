@@ -10,12 +10,10 @@ class AvailabilityChecker {
 
   constructor() {
     this.#ddosService = new HttpDdosService(this.#ddosCount);
-    this.startCheck();
   }
 
   async startCheck() {
-    await this.check();
-    setTimeout(this.startCheck.bind(this), 0);
+    await this._check();
   }
 
   parseResponses(responses) {
@@ -63,72 +61,35 @@ class AvailabilityChecker {
     return campMatches;
   }
 
-  async check() {
-    const requestsForCamps = Object.entries(campMonthsToRequest).map(([campId, months]) => {
-      return {
-        campId,
-        requests: months.map((month) =>
-          this.#path + campId + "/month?start_date=" +
-          `${new Date().getFullYear()}-${month < 10 ? '0' + month : month}-01T00%3A00%3A00.000Z`
-      )};
+
+
+  async _check() {
+    const requestsQueue = Object.entries(campMonthsToRequest).flatMap(([campId, months]) => {
+      return months.map((month) => ({
+        campId: campId,
+        request: this.#path + campId + "/month?start_date=" +
+            `${new Date().getFullYear()}-${month < 10 ? '0' + month : month}-01T00%3A00%3A00.000Z`
+      }));
     });
 
-    let promisesQueue = Promise.resolve();
+    let requestIndex = 0;
+    while(requestsQueue.length > 0) {
+      try {
+        const response = await HttpService.send({path: requestsQueue[requestIndex]['request'], type: 'GET'});
+        const parsedResponse = this.parseResponses([response]);
+        const availabilityMatches = this.checkAvailability(parsedResponse, requestsQueue[requestIndex]['campId']);
+        UserNotifier.notify(requestsQueue[requestIndex]['campId'], availabilityMatches);
+        console.log("availability check succeeded for request " + requestsQueue[requestIndex]['request'] +" at " + new Date());
+      } catch (e) {
+        console.log("availability check failed for request " + requestsQueue[requestIndex]['request'] + " failed with" + e + " at " + new Date());
+      }
+      await new Promise((resolve) => setTimeout(resolve, 3*1000));
 
-    requestsForCamps.forEach(({campId, requests}) => {
-      let responses = [];
-      let campingPromisesQueue = Promise.resolve();
-      promisesQueue = promisesQueue.then(() => {
-        requests.forEach((request, index) => {
-          campingPromisesQueue = campingPromisesQueue
-              .then(() => HttpService.send({path: request, type: 'GET'}))
-              .then((response) => {
-                responses.push(response);
-                return response;
-              })
-              .then((response) => this.parseResponses([response]))
-              .then((availability) => this.checkAvailability(availability, campId))
-              .then((campMatches) => {
-                UserNotifier.notify(campId, campMatches);
-                return Promise.resolve();
-              })
-              .catch((e) => console.log("request " + requests[index] + " failed with" + e + " at " + new Date()))
-              .then(() => {
-                if (index == requests.length - 1) {
-                  return Promise.resolve();
-                }
-                return new Promise((resolve) => setTimeout(resolve, 3*1000))
-              })
-        });
-
-        campingPromisesQueue = campingPromisesQueue
-            .then(() => this.parseResponses(responses))
-            .then((availability) => this.checkAvailability(availability, campId))
-            .then((campMatches) => {
-              // UserNotifier.notify(campId, campMatches);
-              return Promise.resolve();
-            })
-            .catch((e) => console.log("could not finish collecting for camping ", campId));
-
-        return campingPromisesQueue;
-      })
-      .catch(() => console.log("could not finish flow for all camps"))
-      .then(() => new Promise((resolve) => setTimeout(resolve, 3*1000)));
-    });
-
-    return promisesQueue;
-
-    // requestsForCamps.forEach(({campId, requests}) => {
-    //   Promise.all(requests.map((request) => this.#ddosService.get(request)))
-    //       .then((responses) => this.parseResponses(responses))
-    //       .then((availability) => this.checkAvailability(availability, campId))
-    //       .then((campMatches) => UserNotifier.notify(campId, campMatches))
-    //       .catch((e) => console.log("request " + requests[0] + " failed" + e));
-    // });
-
-    // const nextTimerValue =
-    //     requestsForCamps.reduce((sum, {requests}) => requests.length + sum, 0) * (60 / this.#ddosCount) * 1000;
-    // setTimeout(() => this.check(), nextTimerValue < 10000 ? 10000 : nextTimerValue);
+      requestIndex++;
+      if (requestIndex === requestsQueue.length) {
+        requestIndex = 0;
+      }
+    }
   }
 }
 
