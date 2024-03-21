@@ -11,7 +11,7 @@ export default class CampingDatesManager extends React.Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:3001/api/camping-dates")
+        fetch("/api/camping-dates")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -33,7 +33,7 @@ export default class CampingDatesManager extends React.Component {
     }
 
     deleteSubscription(id) {
-        fetch(`http://localhost:3001/api/camping-dates/${id}`, {method: "DELETE"}).then(res => res.json())
+        fetch(`/api/camping-dates/${id}`, {method: "DELETE"}).then(res => res.json())
             .then(
                 (result) => {
                     this.setState({
@@ -62,7 +62,7 @@ export default class CampingDatesManager extends React.Component {
         const formData = new FormData(form);
 
         // You can pass formData as a fetch body directly:
-        fetch('http://localhost:3001/api/camping-dates', {
+        fetch('/api/camping-dates', {
             headers: {
                 "Content-Type": "application/json",
             },
