@@ -285,7 +285,7 @@ router.post('/camping-dates', async (req, res) => {
     res.json({items: campSubscriptions.map(({campId, dates}, index) => ({
             id: index,
             value: `${CampDataStorage.getCampNameById(campId)}: ${dates}`
-        }))});
+        }))}).setHeader("Access-Control-Allow-Origin", "https://recgov-bot.herokuapp.com/");
 });
 
 module.exports = router;
