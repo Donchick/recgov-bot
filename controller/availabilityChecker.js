@@ -73,6 +73,7 @@ class AvailabilityChecker {
 
         let requestIndex = -1;
         while (requestsQueue.length > 0) {
+            await new Promise((resolve) => setTimeout(resolve, 3 * 1000));
             requestIndex++;
             if (requestIndex === requestsQueue.length) {
                 requestIndex = 0;
@@ -103,8 +104,6 @@ class AvailabilityChecker {
                 continue;
             }
             console.log("availability check succeeded for request " + requestsQueue[requestIndex]['request'] + " at " + new Date());
-
-            await new Promise((resolve) => setTimeout(resolve, 3 * 1000));
         }
     }
 }
