@@ -56,20 +56,11 @@ app.listen(PORT, async () => {
     console.log(camps);
     addUser('irina', '123', [{"resource": "whatsapp", "path": "+79119001155"}]);
     const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path": "+79214420927"}]);
-    // addUser('andrey', '1234', [{"resource": "whatsapp", "path": "+79313689455"}]);
+    addUser('andrey', '1234', [{"resource": "whatsapp", "path": "+79313689455"}]);
     for ([key] of usersDB.entries()) {
         subscriptionStorage.add({camps, userId: key});
     }
     (new AvailabilityChecker()).startCheck();
-    WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger has started!');
-    setInterval(() => {
-        WhatsAppNotifier.notify('+79214420927', 'Boss, advanced pinger is working!');
-        console.log('Boss, I\'m working. Message was sent.');
-    }, 60 * 60 * 12 * 1000);
-    setInterval(() => {
-        WhatsAppNotifier.notify('+79214420927', 'Boss, send me a message to keep conversation alive!');
-        console.log('Boss, I\'m working. Message to keep conversation alive was sent.');
-    }, 60 * 60 * 23 * 1000);
 });
 
 module.exports = app;
