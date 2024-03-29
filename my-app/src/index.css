@@ -5,6 +5,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url("recgov-bot-background.jpeg"); /* The image used */
+  background-repeat: repeat; /* Do repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  background-color: #e1e1e1;
 }
 
 code {

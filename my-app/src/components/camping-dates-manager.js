@@ -1,4 +1,5 @@
 import React from 'react';
+import './camping-dates-manager.css';
 
 export default class CampingDatesManager extends React.Component {
     constructor(props) {
@@ -95,6 +96,8 @@ export default class CampingDatesManager extends React.Component {
     }
 
     render() {
+        const days = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
+        const months = ["Jan", "Feb", "March", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const {error, isLoaded, items} = this.state;
         if (error) {
             return <div>Error: {error.message}</div>;
@@ -104,10 +107,16 @@ export default class CampingDatesManager extends React.Component {
             return (
                 <div>
                     <ul>
-                        {items.map((item) => (
+                        {items.sort((item1, item2) => item1.name.localeCompare(item2.name)).map((item) => (
                             <li key={item.id}>
-                                {item.value}
-                                <span onClick={this.deleteSubscription.bind(this, item.id)}>X</span>
+                                {item.name}: {item.dates.map(date => {
+                                const bookedDate = new Date(Date.parse(date));
+                                return `${days[bookedDate.getDay()]}(${months[bookedDate.getMonth()]} ${bookedDate.getDate()})`;
+                            }).join(" - ")}
+                                <button onClick={this.deleteSubscription.bind(this, item.id)}
+                                        className="delete-icon">
+                                    X
+                                </button>
                             </li>
                         ))}
                     </ul>

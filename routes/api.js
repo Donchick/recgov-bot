@@ -260,10 +260,13 @@ router.post('/subscribe', function (req, res, next) {
 router.get('/camping-dates', async (req, res) => {
     const campSubscriptions = await (new DbClient()).getCampingSubscriptions();
 
-    res.json({items: campSubscriptions.map(({campId, dates}, index) => ({
+    res.json({
+        items: campSubscriptions.map(({campId, dates}, index) => ({
             id: index,
-            value: `${CampDataStorage.getCampNameById(campId)}: ${dates}`
-    }))});
+            name: CampDataStorage.getCampNameById(campId),
+            dates: dates
+        }))
+    });
 });
 
 router.delete('/camping-dates/:id', async (req, res) => {
@@ -271,10 +274,13 @@ router.delete('/camping-dates/:id', async (req, res) => {
     await dbClient.removeCampingSubscription(req.params.id);
     const campSubscriptions = await dbClient.getCampingSubscriptions();
 
-    res.json({items: campSubscriptions.map(({campId, dates}, index) => ({
+    res.json({
+        items: campSubscriptions.map(({campId, dates}, index) => ({
             id: index,
-            value: `${CampDataStorage.getCampNameById(campId)}: ${dates}`
-        }))});
+            name: CampDataStorage.getCampNameById(campId),
+            dates: dates
+        }))
+    });
 });
 
 router.post('/camping-dates', async (req, res) => {
@@ -282,10 +288,13 @@ router.post('/camping-dates', async (req, res) => {
     await dbClient.addCampingSubscription(req.body.subscription);
     const campSubscriptions = await dbClient.getCampingSubscriptions();
 
-    res.json({items: campSubscriptions.map(({campId, dates}, index) => ({
+    res.json({
+        items: campSubscriptions.map(({campId, dates}, index) => ({
             id: index,
-            value: `${CampDataStorage.getCampNameById(campId)}: ${dates}`
-        }))});
+            name: CampDataStorage.getCampNameById(campId),
+            dates: dates
+        }))
+    });
 });
 
 module.exports = router;
