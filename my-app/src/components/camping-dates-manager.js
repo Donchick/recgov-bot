@@ -126,7 +126,8 @@ export default class CampingDatesManager extends React.Component {
                                 if (index === (item.dates.length - 1)) {
                                     const bookedDate = new Date(date);
                                     bookedDate.setMinutes(bookedDate.getMinutes() + this.utcToPdtMinutesAdjustment);
-                                    return str + " - " + `${this.days[bookedDate.getDay() + 1]}(${this.months[bookedDate.getMonth()]} ${bookedDate.getDate() + 1})`;
+                                    bookedDate.setDate(bookedDate.getDate() + 1);
+                                    return str + " - " + `${this.days[bookedDate.getDay()]}(${this.months[bookedDate.getMonth()]} ${bookedDate.getDate()})`;
                                 }
                                 return str;
                             }, "")}
