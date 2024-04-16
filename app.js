@@ -56,7 +56,7 @@ app.listen(PORT, async () => {
     console.log(camps);
     addUser('irina', '123', [{"resource": "whatsapp", "path": "+79119001155"}]);
     const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path": "+79214420927"}]);
-    addUser('andrey', '1234', [{"resource": "whatsapp", "path": "+79313689455"}]);
+    addUser('andrey', '1234', [{"resource": "whatsapp", "path": "+14124679019"}]);
     for ([key] of usersDB.entries()) {
         subscriptionStorage.add({camps, userId: key});
     }
