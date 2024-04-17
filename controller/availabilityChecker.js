@@ -73,7 +73,7 @@ class AvailabilityChecker {
 
         let requestIndex = -1;
         while (requestsQueue.length > 0) {
-            await new Promise((resolve) => setTimeout(resolve, 2 * 1000));
+            await new Promise((resolve) => setTimeout(resolve, 3 * 1000));
             requestIndex++;
             if (requestIndex === requestsQueue.length) {
                 requestIndex = 0;
