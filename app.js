@@ -6,7 +6,11 @@ var logger = require('morgan');
 const AvailabilityChecker = require('./controller/availabilityChecker');
 const redis = require("redis");
 const {promisifyAll} = require('bluebird');
-const client = redis.createClient({url: process.env.REDIS_URL});
+const client = redis.createClient(
+    {
+        url: process.env.REDIS_URL,
+        tls: {rejectUnauthorized: false}
+    });
 
 var apiRouter = require('./routes/api');
 var authRouter = require('./routes/auth');
