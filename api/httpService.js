@@ -1,4 +1,4 @@
-const requestPromise = require('request-promise');
+const {get} = require("node:https");
 
 const REQUEST_TYPE = {
   GET: 'GET',
@@ -46,14 +46,22 @@ class HttpService {
   }
 
   static async get({path}) {
-    return requestPromise({
-      uri: path,
-      headers: {
-        'User-Agent': 'Request-Promise'
-      },
-      json: true // Automatically parses the JSON string in the response});
-    }).then((response) => {
-      return response;
+    return new Promise((resolve, reject) => {
+      get(path, (res) => {
+        res.setEncoding('utf8');
+        let rawData = '';
+        res.on('data', (chunk) => { rawData += chunk; });
+        res.on('end', () => {
+          try {
+            const parsedData = JSON.parse(rawData);
+            resolve(parsedData);
+          } catch (e) {
+            reject(e);
+          }
+        });
+      }).on('error', (e) => {
+        reject(e);
+      });
     });
   }
 }

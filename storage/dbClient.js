@@ -10,7 +10,10 @@ class DbClient {
         }
         DbClient._instance = this;
 
-        DbClient._redisClient = redis.createClient({url: process.env.REDIS_URL});
+        DbClient._redisClient = redis.createClient({
+            url: process.env.REDIS_URL,
+            tls: {rejectUnauthorized: false}
+        });
     }
 
     async getCampingSubscriptions() {
@@ -21,7 +24,7 @@ class DbClient {
     }
 
     async removeCampingSubscription(index) {
-        await  DbClient._redisClient.lsetAsync("campRequests", index, "DELETED");
+        await DbClient._redisClient.lsetAsync("campRequests", index, "DELETED");
         return DbClient._redisClient.lremAsync("campRequests", 1, "DELETED");
     }
 

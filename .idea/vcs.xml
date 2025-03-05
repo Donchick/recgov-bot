@@ -36,7 +36,5 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/advanced-camping-pinger" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/recgov-bot" vcs="Git" />
   </component>
 </project>
