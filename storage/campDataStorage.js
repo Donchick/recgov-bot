@@ -5,6 +5,7 @@ class CampDataStorage {
     '232447': 'Yosemity(Upper Pines)',
     '232768': 'Tahoe(Nevada Beach)',
     '233345': 'Alpine View Campground',
+    '232254': 'Pinecrest',
   };
 
   static getCampNameById(id) {

@@ -145,6 +145,8 @@ export default class CampingDatesManager extends React.Component {
                             <select name="camping" id="camping">
                                 <option value="232449">North Pines</option>
                                 <option value="232447">Upper Pines</option>
+                                <option value="232450">Lower Pines</option>
+                                <option value="232254">Pinecrest</option>
                                 <option value="232768">Tahoe</option>
                             </select>
                             <label htmlFor="startDate">Check-in date:</label>
