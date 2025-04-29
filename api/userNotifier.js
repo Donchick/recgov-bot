@@ -23,7 +23,7 @@ class UserNotifier {
       const dates = dateRange.split(':');
       const availableDatesMessage = dates.length === 1 ? dates[0] : dates.filter((element, index) => dates.indexOf(element) === index).join(' - ');
       const message =
-          `${campName} - ${matchingList[dateRange].campsiteIds.join(', ')}:\n${availableDatesMessage}\nhttps://www.recreation.gov/camping/campgrounds/${campId}/availability`;
+          `${campName} - ${matchingList[dateRange].campsiteIds.join(', ')}:\n${availableDatesMessage}\nhttps://www.recreation.gov/camping/campgrounds/${campId}`;
 
       matchingList[dateRange].users.forEach((userId) => sendUserMessage(userId, message));
     });
