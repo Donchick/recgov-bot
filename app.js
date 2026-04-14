@@ -54,9 +54,9 @@ app.listen(PORT, async () => {
     const camps = await (new DbClient()).getCampingSubscriptions();
 
     console.log(camps);
-    addUser('irina', '123', [{"resource": "whatsapp", "path": "+79119001155"}]);
-    const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path": "+79214420927"}]);
-    addUser('andrey', '1234', [{"resource": "whatsapp", "path": "+14124679019"}]);
+    // addUser('irina', '123', [{"resource": "whatsapp", "path": "+79119001155"}]);
+    const usersDB = addUser('donat', '123', [{"resource": "whatsapp", "path": "+14154120073"}]);
+    // addUser('andrey', '1234', [{"resource": "whatsapp", "path": "+14124679019"}]);
     for ([key] of usersDB.entries()) {
         subscriptionStorage.add({camps, userId: key});
     }
